@@ -13,11 +13,12 @@ const userDao = new UserDao()
 const userVerify = new Verify()
 class AuthController {
     register(req: Request, res: Response) {
-        const { name, email, password } = req.body
+        const { name, email, password,url_avatar } = req.body
         const user: IUser = {
             name,
             email,
             password,
+            url_avatar,
             is_active: true,
             role: Role.CLIENT,
         }

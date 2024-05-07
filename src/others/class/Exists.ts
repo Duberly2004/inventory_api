@@ -1,13 +1,12 @@
-import { Document, Model, ObjectId } from "mongoose";
+import { Document, Model, ObjectId, Types } from "mongoose";
 import ErrorType from "./Error";
-
 class Exists<T extends Document> {
     model: Model<T>;
 
     constructor(model:Model<T>){
         this.model = model
     }
-    async forId(_id:ObjectId,field?:String){
+    async forId(_id:Types.ObjectId,field?:String){
         const obj = await this.model.findById(_id)
         if(!obj){
             const error = new ErrorType(`${field?field:"Dato"} no encontrado`,404) 

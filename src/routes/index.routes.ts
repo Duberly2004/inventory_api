@@ -16,6 +16,8 @@ router.post('/auth/register',validateSchema(userSchema),auth.register)
 const category = new CategoryController()
 router.post('/category',passport.authenticate('jwt',{session:false}),validateSchema(nameShema),category.create)
 router.get('/categories',passport.authenticate('jwt',{session:false}),category.list)
+router.delete('/category/:id',passport.authenticate('jwt',{session:false}),category.delete)
+router.patch('/category/:id',passport.authenticate('jwt',{session:false}),category.update)
 
 const product = new ProductController()
 router.post('/product',passport.authenticate('jwt',{session:false}),validateSchema(productSchema),product.create)

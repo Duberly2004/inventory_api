@@ -9,6 +9,10 @@ const categorySchema = new Schema({
     user_id:{
         type:Types.ObjectId,
         required:true
+    },
+    color:{
+        type:String,
+        default:"#61fa29"
     }
 })
 export default model<Category>("Category",categorySchema)

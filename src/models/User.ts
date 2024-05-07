@@ -17,6 +17,9 @@ const userSchema = new Schema({
         lowercase: true,
         trim: true
     },
+    url_avatar:{
+        type: String
+    },
     password: {
         type: String,
         required: true

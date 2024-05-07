@@ -25,7 +25,9 @@ export const isActiveSchema = z.object({
 export const roleSchema = z.object({
     role:z.enum([Role.ADMIN,Role.CLIENT]).optional()
 }) 
-
+export const urlAvatarShema = z.object({
+    url_avatar:z.string({required_error:getMsgZodError("url_avatar")})
+})
 export const statusSchema = z.object({
     status:z.enum([
         ProductStatus.Available,

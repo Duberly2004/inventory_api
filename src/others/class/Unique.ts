@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose";
+import { Model, Document, Types } from "mongoose";
 import ErrorType from "./Error";
 
 class Unique<T extends Document> {
@@ -9,11 +9,11 @@ class Unique<T extends Document> {
   }
 
   async forEmail(email: string) {
-      const obj = await this.model.findOne({ email }).exec();
-      if (obj) {
-        const error = new ErrorType("The email already in use", 400);
-        throw new Error(error.string());
-      }
+    const obj = await this.model.findOne({ email }).exec();
+    if (obj) {
+      const error = new ErrorType("The email already in use", 400);
+      throw new Error(error.string());
+    }
   }
   async forName(name: string) {
     const obj = await this.model.findOne({ name }).exec();
@@ -21,7 +21,15 @@ class Unique<T extends Document> {
       const error = new ErrorType("The name already in use", 400);
       throw new Error(error.string());
     }
-}
+  }
+  async forNameInUser(name: string, user_id: Types.ObjectId) {
+    const obj = await this.model.findOne({ name, user_id }).exec();
+    if (obj) {
+      const error = new ErrorType("The name already in use", 400);
+      throw new Error(error.string());
+    }
+
+  }
 }
 
 export default Unique;

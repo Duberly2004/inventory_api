@@ -1,9 +1,8 @@
 import { number, z } from "zod";
-import { categoryIdSchema, descriptionShema, emailSchema, isActiveSchema, nameShema, passwordShema, roleSchema, statusSchema } from "./others";
+import { categoryIdSchema, descriptionShema, emailSchema, isActiveSchema, nameShema, passwordShema, roleSchema, statusSchema, urlAvatarShema } from "./others";
 import { getMsgZodError } from "../functions/error";
 import { PaymentMethod } from "../enums";
-import { IProductDetail } from "../interfaces";
-export const userSchema = nameShema.merge(emailSchema).merge(passwordShema).merge(isActiveSchema).merge(roleSchema)
+export const userSchema = nameShema.merge(emailSchema).merge(passwordShema).merge(isActiveSchema).merge(roleSchema).merge(urlAvatarShema)
 export const loginShema = emailSchema.merge(passwordShema)
 export const productSchema = nameShema.merge(descriptionShema).merge(categoryIdSchema).merge(statusSchema).extend({
     price:z.number({required_error:getMsgZodError("price")})
