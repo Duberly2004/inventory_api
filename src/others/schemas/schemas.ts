@@ -5,7 +5,9 @@ import { PaymentMethod } from "../enums";
 export const userSchema = nameShema.merge(emailSchema).merge(passwordShema).merge(isActiveSchema).merge(roleSchema).merge(urlAvatarShema)
 export const loginShema = emailSchema.merge(passwordShema)
 export const productSchema = nameShema.merge(descriptionShema).merge(categoryIdSchema).merge(statusSchema).extend({
-    price:z.number({required_error:getMsgZodError("price")})
+    price:z.number({required_error:getMsgZodError("price")}),
+    url_image:z.string({required_error:getMsgZodError("url_image")}),
+    stock:z.number({required_error:getMsgZodError("stock")}),
 })
 export const productDetailSchema = nameShema.extend({
     price:z.number({required_error:getMsgZodError("price")}),

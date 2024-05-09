@@ -22,6 +22,8 @@ export interface IProduct {
     price:number;
     status:ProductStatus;
     category_id:Types.ObjectId;
+    url_image:string
+    stock:number
 }
 
 export interface IProductDetail {

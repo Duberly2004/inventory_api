@@ -22,6 +22,9 @@ router.patch('/category/:id',passport.authenticate('jwt',{session:false}),catego
 const product = new ProductController()
 router.post('/product',passport.authenticate('jwt',{session:false}),validateSchema(productSchema),product.create)
 router.get('/products',passport.authenticate('jwt',{session:false}),product.list)
+router.get('/products/all',product.all)
+router.delete('/product/:id',passport.authenticate('jwt',{session:false}),product.delete)
+router.post('/product/:id',passport.authenticate('jwt',{session:false}),validateSchema(productSchema),product.update)
 
 const order = new OrderControlller()
 router.post('/order',passport.authenticate('jwt',{session:false}),validateSchema(orderSchema),order.create)
