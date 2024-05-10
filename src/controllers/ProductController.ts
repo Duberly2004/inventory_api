@@ -25,40 +25,60 @@ class ProductController {
         assertHasUser(req)
         productDao.list(req,res,req.user._id)
     }
-    async all(req:Request,res:Response){
+    async all(req: Request, res: Response) {
         try {
-            const productsWithCategory = await Product.aggregate([
-                // Paso 1: Realizar un lookup para obtener la información de categoría de cada producto
+            const productsWithCategoryAndUser = await Product.aggregate([
+                // Paso 1: Obtener la información de la categoría de cada producto
                 {
                     $lookup: {
                         from: 'categories', // Nombre de la colección de categorías en la base de datos
-                        localField: 'category_id', // Campo local en Product para comparar con foreignField en Category
-                        foreignField: '_id', // Campo en Category para comparar con localField en Product
-                        as: 'category' // Nombre del campo donde se almacenará la información de categoría
+                        localField: 'category_id', // Campo local en Product para comparar
+                        foreignField: '_id', // Campo en Category para comparar
+                        as: 'category' // Almacenar resultado en el campo 'category'
                     }
                 },
-                // Paso 2: Desenrollar (unwind) el array de categorías (cada producto está asociado a una sola categoría)
+                // Paso 2: Desenrollar el array de categorías (asumimos que cada producto tiene una sola categoría)
                 { $unwind: '$category' },
-                // Paso 4: Proyectar solo los campos necesarios de los productos y la categoría asociada
+                // Paso 3: Obtener la información del usuario asociado a cada categoría
+                {
+                    $lookup: {
+                        from: 'users', // Colección de usuarios
+                        localField: 'category.user_id', // Referencia desde el documento de categoría
+                        foreignField: '_id', // Campo en User para comparar
+                        as: 'category.user' // Almacenar el resultado en 'user' dentro de 'category'
+                    }
+                },
+                // Paso 4: Desenrollar el array de usuarios (asumimos que cada categoría tiene un solo usuario)
+                { $unwind: '$category.user' },
+                // Paso 5: Proyectar solo los campos necesarios
                 {
                     $project: {
-                        _id: 1, // Mantener el ID del producto
-                        name: 1, // Mantener el nombre del producto
-                        price: 1, // Mantener el precio del producto
-                        url_image:1,
-                        stock:1,
-                        status:1,
-                        description:1,
-                        category: '$category' // Mantener la información completa de la categoría asociada
+                        _id: 1,
+                        name: 1,
+                        price: 1,
+                        url_image: 1,
+                        stock: 1,
+                        status: 1,
+                        description: 1,
+                        category: {
+                            name: '$category.name',
+                            color: '$category.color',
+                            user: {
+                                _id: '$category.user._id',
+                                url_avatar:'$category.user.url_avatar',
+                                name: '$category.user.name'
+                            }
+                        }
                     }
                 }
             ]);
-            res.json(productsWithCategory);
+            res.json(productsWithCategoryAndUser);
         } catch (error) {
-            // En caso de un error durante la ejecución, manejamos el error
-            res.sendStatus(500);
+            console.error('Error retrieving products with category and user', error);
+            res.sendStatus(500); // Envía un estado HTTP 500 en caso de error
         }
     }
+    
     update(req:Request,res:Response){
         assertHasUser(req)
         const _id = new Types.ObjectId(req.params.id)
